@@ -567,7 +567,11 @@ export default function Faculty() {
       pendingRef: pendingCardReferenceRef,
       clientRef: mqttCardClientRef,
       setRegistering: setIsMqttCardRegistering,
-      onSuccess: (cardId) => setNewFaculty((prev) => ({ ...prev, cardId })),
+      onSuccess: (cardId) => {
+        setNewFaculty((prev) => ({ ...prev, cardId }));
+        void clearEnrollmentData();
+        resetEnrollment();
+      },
       waitingMessage: '🔄 Waiting for RFID card data via MQTT...',
       successMessage: (cardId) => `✅ RFID ${cardId} received via MQTT.`,
       alreadyMessage: "✅ RFID registration already in progress. Please wait.",
@@ -584,7 +588,11 @@ export default function Faculty() {
       pendingRef: pendingFingerprintReferenceRef,
       clientRef: mqttFingerprintClientRef,
       setRegistering: setIsMqttFingerprintRegistering,
-      onSuccess: (fingerprintId) => setNewFaculty((prev) => ({ ...prev, fingerprintId })),
+      onSuccess: (fingerprintId) => {
+        setNewFaculty((prev) => ({ ...prev, fingerprintId }));
+        void clearEnrollmentData();
+        resetEnrollment();
+      },
       waitingMessage: '🔄 Waiting for fingerprint data via MQTT...',
       successMessage: (fingerprintId) => `✅ Fingerprint ${fingerprintId} received via MQTT.`,
       alreadyMessage: "✅ Fingerprint registration already in progress. Please wait.",
