@@ -1,0 +1,36 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase-admin": "^12.7.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.17",
+    "tsx": "^4.7.0",
+    "typescript": "^5.9.3"
+  },
+  "devices": {
+    "name": "SmartGuard_01",
+    "location": "Front Door",
+    "status": "unlocked",
+    "lastSeen": "09:31 AM",
+    "online": true
+  },
+  "accessLogs": {
+    "timestamp": "09:31 AM",
+    "user": "Prof. Santos",
+    "method": "Fingerprint",
+    "result": "Granted",
+    "door": "Front Door",
+    "description": "Faculty Entry"
+  }
+}
