@@ -38,7 +38,7 @@ interface AccessLog {
   notes: string;
 }
 
-const MQTT_BROKER_URL = "mqtt://broker.emqx.io:1883";
+const MQTT_BROKER_URL = "wss://broker.emqx.io:8084/mqtt";
 const MQTT_REGISTER_CARD_TOPIC = "smartguard/register/card";
 const MQTT_REGISTER_CARD_SUCCESS_TOPIC = "smartguard/register/card/success";
 const MQTT_REGISTER_FINGERPRINT_TOPIC = "smartguard/register/fingerprint";
