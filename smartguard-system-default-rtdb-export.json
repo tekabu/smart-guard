@@ -1,0 +1,414 @@
+{
+  "SmartGuardLogs": {
+    "FrontDoor": {
+      "33401": "9F399FDA",
+      "35106": "9F399FDA"
+    }
+  },
+  "accessLogs": {
+    "-OeXPntCuVmj9b0yajUF": {
+      "door": "Front Door",
+      "method": "RFID",
+      "notes": "Access denied: RFID not registered.",
+      "result": "Denied",
+      "timestamp": 1763661528653,
+      "user": "Unknown User (RFID: 9F399FDA)"
+    },
+    "-OeXPpePWCe4tCzHrfxY": {
+      "door": "Front Door",
+      "method": "RFID",
+      "notes": "Access denied: RFID not registered.",
+      "result": "Denied",
+      "timestamp": 1763661535898,
+      "user": "Unknown User (RFID: 9F399FDA)"
+    },
+    "-OeXPqe8xeQ6OihRlMOL": {
+      "door": "Front Door",
+      "method": "RFID",
+      "notes": "Access denied: RFID not registered.",
+      "result": "Denied",
+      "timestamp": 1763661539977,
+      "user": "Unknown User (RFID: F2FB8A41)"
+    },
+    "-OeXPtbRUntOOIADfw0F": {
+      "door": "Front Door",
+      "method": "RFID",
+      "notes": "Access denied: RFID not registered.",
+      "result": "Denied",
+      "timestamp": 1763661552092,
+      "user": "Unknown User (RFID: F2FB8A41)"
+    }
+  },
+  "audit_logs": {
+    "-OeTLbmqvszVbX7a8RZ8": {
+      "action": "emergency_unlock",
+      "details": "Emergency unlock activated: Emergency situation",
+      "severity": "critical",
+      "target": "all_doors",
+      "timestamp": "2025-11-19T23:02:01.603Z",
+      "type": "admin_action",
+      "user": "Admin"
+    },
+    "-OeTMl3IcNawxiASkuBL": {
+      "action": "auto_lock",
+      "details": "Doors auto-locked after emergency unlock timeout",
+      "severity": "medium",
+      "target": "all_doors",
+      "timestamp": "2025-11-19T23:07:01.728Z",
+      "type": "system_change",
+      "user": "system"
+    }
+  },
+  "enrollment": {
+    "temp": {
+      "fingerprint": "",
+      "mode": "idle",
+      "rfid": "",
+      "status": "idle",
+      "timestamp": 1764067721594
+    }
+  },
+  "hardware": {
+    "commands": {
+      "delete_fingerprint": {
+        "fingerprintId": "true",
+        "status": "pending",
+        "timestamp": 1763669396347,
+        "userId": "true",
+        "userName": "Edcel Kadusale",
+        "userType": "faculty"
+      },
+      "emergency_unlock": {
+        "active": false,
+        "timestamp": 1763593621689
+      }
+    }
+  },
+  "logs": {
+    "back": {
+      "-Odm3nlkEQCGfKwZZIjo": "RFID:EDC73702"
+    },
+    "front": {
+      "-Odm3ox6BG8yUIYzd0K-": "RFID:EDC73702"
+    }
+  },
+  "security": {
+    "emergency_unlocks": {
+      "-OeTLbl_OC6CaatxWrCu": {
+        "admin": "Admin",
+        "auto_locked_at": "2025-11-19T23:07:01.648Z",
+        "doors": [
+          "all"
+        ],
+        "duration": 300,
+        "reason": "Emergency situation",
+        "status": "completed",
+        "timestamp": "2025-11-19T23:02:01.522Z"
+      }
+    }
+  },
+  "sessions": {
+    "-OeS7ivX935GXH2PAFtk": {
+      "attendance": {
+        "137FF539": {
+          "method": "RFID",
+          "name": "Edcel Garbanzos",
+          "studentId": "202210523",
+          "timeIn": "162092"
+        },
+        "9F399FDA": {
+          "method": "RFID",
+          "name": "John Ferdinand Valdez",
+          "studentId": "202210583",
+          "timeIn": "198937"
+        },
+        "EDC73702": {
+          "method": "RFID",
+          "name": "Althea Joy Galvez",
+          "studentId": "202201328",
+          "timeIn": "157719"
+        }
+      },
+      "attendanceCount": 3,
+      "ended": "2025-11-19T17:23:10.189Z",
+      "facultyId": "F2FB8A41",
+      "facultyName": "Rhoel Sarino",
+      "id": "-OeS7ivX935GXH2PAFtk",
+      "room": "Lab101",
+      "sessionId": "SESSION_1763572902954",
+      "started": "2025-11-19T17:21:42.954Z",
+      "status": "Ended",
+      "subjectCode": "ITEC101",
+      "subjectId": "-OduPaKN2a0T00wMfriQ",
+      "subjectName": "Information Technology"
+    },
+    "-OeSC4qwDnUNx34duses": {
+      "attendance": {
+        "137FF539": {
+          "method": "RFID",
+          "name": "Edcel Garbanzos",
+          "studentId": "202210523",
+          "timeIn": "31275"
+        }
+      },
+      "attendanceCount": 1,
+      "ended": "2025-11-19T18:24:21.075Z",
+      "facultyId": "F2FB8A41",
+      "facultyName": "Rhoel Sarino",
+      "id": "-OeSC4qwDnUNx34duses",
+      "room": "Lab101",
+      "sessionId": "SESSION_1763574045387",
+      "started": "2025-11-19T17:40:45.387Z",
+      "status": "Ended",
+      "subjectCode": "ITEC101",
+      "subjectId": "-OduPaKN2a0T00wMfriQ",
+      "subjectName": "Information Technology"
+    },
+    "-OeSSRbbU0fEGWgby9bn": {
+      "attendance": {
+        "137FF539": {
+          "method": "RFID",
+          "name": "Edcel Garbanzos",
+          "studentId": "202210523",
+          "timeIn": "163846"
+        },
+        "9F399FDA": {
+          "method": "RFID",
+          "name": "John Ferdinand Valdez",
+          "studentId": "202210583",
+          "timeIn": "264965"
+        }
+      },
+      "attendanceCount": 2,
+      "ended": "2025-11-19T23:01:48.912Z",
+      "facultyId": "F2FB8A41",
+      "facultyName": "Rhoel Sarino",
+      "id": "-OeSSRbbU0fEGWgby9bn",
+      "room": "Lab101",
+      "sessionId": "SESSION_1763578332918",
+      "started": "2025-11-19T18:52:12.918Z",
+      "status": "Ended",
+      "subjectCode": "ITEC101",
+      "subjectId": "-OduPaKN2a0T00wMfriQ",
+      "subjectName": "Information Technology"
+    },
+    "-OeTj3mnYAUKZHJcnYtu": {
+      "facultyEntry": {
+        "-OeV8dc1Cq-cduh1PfPq": "F2FB8A41",
+        "-OeV8evxgW-CAgVQ0vVI": "F2FB8A41"
+      }
+    },
+    "-OeVDyrTAb_f2_iygrza": {
+      "attendance": {
+        "137FF539": {
+          "method": "RFID",
+          "name": "Edcel Garbanzos",
+          "studentId": "202210523",
+          "timeIn": "27444"
+        }
+      },
+      "attendanceCount": 1,
+      "ended": "2025-11-20T07:48:34.428Z",
+      "facultyId": "F2FB8A41",
+      "facultyName": "Rhoel Sarino",
+      "id": "-OeVDyrTAb_f2_iygrza",
+      "room": "Lab101",
+      "sessionId": "SESSION_1763624873432",
+      "started": "2025-11-20T07:47:53.432Z",
+      "status": "Ended",
+      "subjectCode": "ITEC101",
+      "subjectId": "-OduPaKN2a0T00wMfriQ",
+      "subjectName": "Information Technology"
+    },
+    "-OeVy6Sc90IjEQGWZFj0": {
+      "createdAt": "2025-11-20T11:13:49.315Z",
+      "facultyEntry": {
+        "-OeVz8zcP8iLYcRgAv9D": "F2FB8A41",
+        "-OeVzAX52t8jI7J5b7NS": "F2FB8A41",
+        "-OeVzIozru3wV0BV5-EG": "F2FB8A41"
+      },
+      "facultyId": "F2FB8A41",
+      "facultyName": "Rhoel Sarino",
+      "room": "Lab101",
+      "sessionId": "SESSION_1763637229315",
+      "started": "2025-11-20T11:13:49.315Z",
+      "status": "Active",
+      "subjectCode": "ITEC101",
+      "subjectId": "-OduPaKN2a0T00wMfriQ",
+      "subjectName": "Information Technology"
+    },
+    "-OeX-8wDaTWALwku2i7P": {
+      "attendance": {
+        "9F399FDA": {
+          "method": "RFID",
+          "name": "John Ferdinand Valdez",
+          "studentId": "202210583",
+          "timeIn": "83460"
+        }
+      }
+    },
+    "active": {
+      "facultyName": "Rhoel Sarino",
+      "firebaseKey": "-OenmPed6E8QrTsKaM7X",
+      "room": "Lab101",
+      "sessionId": "SESSION_1763952928212",
+      "subjectCode": "ITEC101",
+      "subjectName": "Information Technology"
+    },
+    "history": {
+      "-OeVy6Sc90IjEQGWZFj0": {
+        "endTime": 1763653615526,
+        "status": "ended"
+      },
+      "-OeWwd5N1PJSHSjS0Zb8": {
+        "endTime": 1763653709182,
+        "firebaseKey": "-OeWwd5N1PJSHSjS0Zb8",
+        "sessionId": "-OeWwd5N1PJSHSjS0Zb8",
+        "startTime": 1763653620158,
+        "status": "ended"
+      },
+      "-OeWwztK_VCPmScR9Ls8": {
+        "endTime": 1763653752936,
+        "firebaseKey": "-OeWwztK_VCPmScR9Ls8",
+        "sessionId": "-OeWwztK_VCPmScR9Ls8",
+        "startTime": 1763653713530,
+        "status": "ended"
+      },
+      "-OeX-4Ekp75PHUFaIX1j": {
+        "endTime": 1763654523700,
+        "firebaseKey": "-OeX-4Ekp75PHUFaIX1j",
+        "sessionId": "-OeX-4Ekp75PHUFaIX1j",
+        "startTime": 1763654521877,
+        "status": "ended"
+      },
+      "-OeX-8wDaTWALwku2i7P": {
+        "firebaseKey": "-OeX-8wDaTWALwku2i7P",
+        "sessionId": "-OeX-8wDaTWALwku2i7P",
+        "startTime": 1763654541107,
+        "status": "active"
+      }
+    }
+  },
+  "smartguard": {
+    "logs": {
+      "access": "",
+      "back": "",
+      "front": "",
+      "system": {
+        "-OeWERiapV6lmOyHnWRw": "[ENROLL] RFID Started",
+        "-OeWh1FLTtE6aTYnKbia": {
+          "action": "FP_DELETE_EXECUTED",
+          "fingerprintId": "1",
+          "message": "Sent delete command to Mega via Polling.",
+          "timestamp": 1763649528855,
+          "userId": "F2FB8A41",
+          "userName": "Rhoel Sarino"
+        },
+        "-OeWh4qUGs4T7ymw9K7e": {
+          "action": "FP_DELETE_EXECUTED",
+          "fingerprintId": "1",
+          "message": "Sent delete command to Mega via Polling.",
+          "timestamp": 1763649543583,
+          "userId": "F2FB8A41",
+          "userName": "Rhoel Sarino"
+        },
+        "1763310284599": {
+          "action": "DELETE_FINGERPRINT_COMMAND",
+          "fingerprintId": "6",
+          "timestamp": "2025-11-16T16:24:44.599Z",
+          "userId": "F2FB8A41",
+          "userName": "Jeff Soriano",
+          "userType": "faculty"
+        },
+        "1763574104819": {
+          "action": "DELETE_FINGERPRINT_COMMAND",
+          "fingerprintId": "4",
+          "timestamp": "2025-11-19T17:41:44.819Z",
+          "userId": "EDC73702",
+          "userName": "Althea Joy Galvez",
+          "userType": "student"
+        },
+        "1763637565292": {
+          "action": "DELETE_FINGERPRINT_COMMAND",
+          "fingerprintId": "1",
+          "timestamp": "2025-11-20T11:19:25.292Z",
+          "userId": "F2FB8A41",
+          "userName": "Rhoel Sarino",
+          "userType": "faculty"
+        },
+        "1763669396389": {
+          "action": "DELETE_FINGERPRINT_COMMAND",
+          "fingerprintId": "true",
+          "timestamp": "2025-11-20T20:09:56.389Z",
+          "userId": "true",
+          "userName": "Edcel Kadusale",
+          "userType": "faculty"
+        }
+      }
+    },
+    "subjects": "",
+    "users": ""
+  },
+  "subjects": {
+    "-OduPaKN2a0T00wMfriQ": {
+      "active": true,
+      "code": "ITEC101",
+      "createdAt": "2025-11-12T23:33:05.747Z",
+      "enrolledStudents": [
+        "9F399FDA",
+        "EDC73702",
+        "92BBCEAB",
+        "137FF539"
+      ],
+      "facultyId": "F2FB8A41",
+      "facultyName": "Rhoel Sarino",
+      "name": "Information Technology",
+      "room": "Lab101",
+      "schedule": {
+        "days": [
+          "Monday"
+        ],
+        "endTime": "10:30",
+        "startTime": "08:30"
+      },
+      "schoolYear": "2024-2025",
+      "semester": "1st Semester"
+    }
+  },
+  "users": {
+    "students": {
+      "137FF539": {
+        "accessCount": 0,
+        "attendanceRate": 0,
+        "course": "BSIT",
+        "createdAt": "2025-11-12T02:08:55.271Z",
+        "email": "tteeeey@gmail.com",
+        "fprints": {
+          "3": true
+        },
+        "lastAccess": "Never",
+        "name": "Edcel Garbanzos",
+        "registered": true,
+        "role": "student",
+        "student_id": "202210523",
+        "year_level": "4th Year"
+      },
+      "9F399FDA": {
+        "accessCount": 0,
+        "attendanceRate": 0,
+        "course": "BSIT",
+        "createdAt": "2025-11-12T02:08:09.771Z",
+        "email": "tteeeey@gmail.com",
+        "fprints": {
+          "2": true
+        },
+        "lastAccess": "Never",
+        "name": "John Ferdinand Valdez",
+        "registered": true,
+        "role": "student",
+        "student_id": "202210583",
+        "year_level": "4th Year"
+      }
+    }
+  }
+}
