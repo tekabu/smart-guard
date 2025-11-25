@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ref, onValue, off, set, remove } from "firebase/database";
 import { toast } from "react-toastify";
+import mqtt, { type MqttClient } from "mqtt";
 // Assume other imports (auth, getRealtimeDb, Sidebar, etc.) are defined outside this file
 // Note: We need React for ChangeEvent typing
 import React from 'react'; 
@@ -37,6 +38,20 @@ interface AccessLog {
   notes: string;
 }
 
+const MQTT_BROKER_URL = "mqtt://broker.emqx.io:1883";
+const MQTT_REGISTER_CARD_TOPIC = "smartguard/register/card";
+const MQTT_REGISTER_CARD_SUCCESS_TOPIC = "smartguard/register/card/success";
+const MQTT_REGISTER_FINGERPRINT_TOPIC = "smartguard/register/fingerprint";
+const MQTT_REGISTER_FINGERPRINT_SUCCESS_TOPIC = "smartguard/register/fingerprint/success";
+
+const createUuid = () => {
+  const randomUUID = globalThis.crypto?.randomUUID;
+  if (typeof randomUUID === "function") {
+    return randomUUID();
+  }
+  return `uuid-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
 export default function Faculty() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [faculty, setFaculty] = useState<Faculty[]>([]);
@@ -61,6 +76,13 @@ export default function Faculty() {
     active: true,
     schedule: {} as Record<string, string>,
   });
+
+  const [isMqttCardRegistering, setIsMqttCardRegistering] = useState(false);
+  const [isMqttFingerprintRegistering, setIsMqttFingerprintRegistering] = useState(false);
+  const mqttCardClientRef = useRef<MqttClient | null>(null);
+  const mqttFingerprintClientRef = useRef<MqttClient | null>(null);
+  const pendingCardReferenceRef = useRef<string | null>(null);
+  const pendingFingerprintReferenceRef = useRef<string | null>(null);
 
   // Enrollment listener hook
   const {
@@ -145,6 +167,20 @@ export default function Faculty() {
     });
 
     return () => off(logsRef, "value", unsubscribe);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      [mqttCardClientRef, mqttFingerprintClientRef].forEach((clientRef) => {
+        const client = clientRef.current;
+        if (client) {
+          client.end(true);
+          clientRef.current = null;
+        }
+      });
+      pendingCardReferenceRef.current = null;
+      pendingFingerprintReferenceRef.current = null;
+    };
   }, []);
 
   // Auto-fill RFID and Fingerprint from enrollment listener
@@ -408,11 +444,155 @@ export default function Faculty() {
     }
   };
 
+  const startMqttRegistration = ({
+    requestTopic,
+    responseTopic,
+    responseKey,
+    pendingRef,
+    clientRef,
+    setRegistering,
+    onSuccess,
+    waitingMessage,
+    successMessage,
+    alreadyMessage,
+    subscribeErrorMessage,
+    publishErrorMessage,
+  }: {
+    requestTopic: string;
+    responseTopic: string;
+    responseKey: "card_id" | "fingerprint_id";
+    pendingRef: React.MutableRefObject<string | null>;
+    clientRef: React.MutableRefObject<MqttClient | null>;
+    setRegistering: React.Dispatch<React.SetStateAction<boolean>>;
+    onSuccess: (value: string) => void;
+    waitingMessage: string;
+    successMessage: (value: string) => string;
+    alreadyMessage: string;
+    subscribeErrorMessage: string;
+    publishErrorMessage: string;
+  }) => {
+    if (pendingRef.current) {
+      toast.info(alreadyMessage);
+      return;
+    }
+
+    const reference = createUuid();
+    pendingRef.current = reference;
+    setRegistering(true);
+
+    const client = mqtt.connect(MQTT_BROKER_URL, {
+      connectTimeout: 5000,
+      keepalive: 30,
+      reconnectPeriod: 0,
+    });
+    clientRef.current = client;
+
+    let cleanedUp = false;
+    const cleanup = () => {
+      if (cleanedUp) return;
+      cleanedUp = true;
+      if (clientRef.current === client) {
+        clientRef.current = null;
+      }
+      if (pendingRef.current === reference) {
+        pendingRef.current = null;
+      }
+      setRegistering(false);
+      client.removeAllListeners();
+      client.end(true);
+    };
+
+    client.on("connect", () => {
+      client.subscribe(responseTopic, { qos: 1 }, (err) => {
+        if (err) {
+          console.error("Failed to subscribe to MQTT success topic", err);
+          cleanup();
+          toast.error(subscribeErrorMessage);
+          return;
+        }
+        client.publish(
+          requestTopic,
+          JSON.stringify({ reference }),
+          { qos: 1 },
+          (publishErr) => {
+            if (publishErr) {
+              console.error("Failed to publish MQTT registration request", publishErr);
+              cleanup();
+              toast.error(publishErrorMessage);
+              return;
+            }
+            toast.info(waitingMessage);
+          }
+        );
+      });
+    });
+
+    client.on("message", (topic, payload) => {
+      if (topic !== responseTopic) return;
+      try {
+        const parsed = JSON.parse(payload.toString());
+        const value = parsed?.[responseKey];
+        if (
+          parsed?.reference === reference &&
+          value &&
+          typeof value === "string"
+        ) {
+          onSuccess(value);
+          toast.success(successMessage(value));
+          cleanup();
+        }
+      } catch (error) {
+        console.error("Failed to parse MQTT payload", error);
+      }
+    });
+
+    client.on("error", (error) => {
+      console.error("MQTT registration error", error);
+      cleanup();
+      toast.error("❌ MQTT connection error. Please try again.");
+    });
+  };
+
+  const startMqttCardRegistration = () => {
+    startMqttRegistration({
+      requestTopic: MQTT_REGISTER_CARD_TOPIC,
+      responseTopic: MQTT_REGISTER_CARD_SUCCESS_TOPIC,
+      responseKey: "card_id",
+      pendingRef: pendingCardReferenceRef,
+      clientRef: mqttCardClientRef,
+      setRegistering: setIsMqttCardRegistering,
+      onSuccess: (cardId) => setNewFaculty((prev) => ({ ...prev, cardId })),
+      waitingMessage: '🔄 Waiting for RFID card data via MQTT...',
+      successMessage: (cardId) => `✅ RFID ${cardId} received via MQTT.`,
+      alreadyMessage: "✅ RFID registration already in progress. Please wait.",
+      subscribeErrorMessage: "❌ Failed to subscribe to RFID confirmation topic.",
+      publishErrorMessage: "❌ Failed to publish RFID registration request.",
+    });
+  };
+
+  const startMqttFingerprintRegistration = () => {
+    startMqttRegistration({
+      requestTopic: MQTT_REGISTER_FINGERPRINT_TOPIC,
+      responseTopic: MQTT_REGISTER_FINGERPRINT_SUCCESS_TOPIC,
+      responseKey: "fingerprint_id",
+      pendingRef: pendingFingerprintReferenceRef,
+      clientRef: mqttFingerprintClientRef,
+      setRegistering: setIsMqttFingerprintRegistering,
+      onSuccess: (fingerprintId) => setNewFaculty((prev) => ({ ...prev, fingerprintId })),
+      waitingMessage: '🔄 Waiting for fingerprint data via MQTT...',
+      successMessage: (fingerprintId) => `✅ Fingerprint ${fingerprintId} received via MQTT.`,
+      alreadyMessage: "✅ Fingerprint registration already in progress. Please wait.",
+      subscribeErrorMessage: "❌ Failed to subscribe to fingerprint confirmation topic.",
+      publishErrorMessage: "❌ Failed to publish fingerprint registration request.",
+    });
+  };
+
   const handleStartRFIDScan = async () => {
     // --- DEBUG LOG ADDED HERE ---
     console.log("--- DEBUG: Attempting to start RFID scan. Check Firebase path /hardware/enrollment/rfid_scan for 'true' ---");
     try {
       await startRFIDScan('faculty');
+      startMqttCardRegistration();
       toast.info("📡 Waiting for RFID scan... Please tap your card");
     } catch (error) {
       console.error("Error starting RFID scan:", error);
@@ -423,6 +603,7 @@ export default function Faculty() {
   const handleStartFingerprintEnroll = async () => {
     try {
       await startFingerprintEnroll('faculty');
+      startMqttFingerprintRegistration();
       toast.info("👆 Waiting for fingerprint... Please place your finger on the sensor");
     } catch (error) {
       console.error("Error starting fingerprint enrollment:", error);
@@ -792,7 +973,7 @@ export default function Faculty() {
                 type="rfid"
                 mode="faculty"
                 value={newFaculty.cardId}
-                isScanning={isRFIDScanning}
+                isScanning={isRFIDScanning || isMqttCardRegistering}
                 onStartScan={handleStartRFIDScan}
                 onValueChange={(value) => setNewFaculty({ ...newFaculty, cardId: value })}
                 label="RFID Card ID"
@@ -804,7 +985,7 @@ export default function Faculty() {
                 type="fingerprint"
                 mode="faculty"
                 value={newFaculty.fingerprintId}
-                isScanning={isFingerprintScanning}
+                isScanning={isFingerprintScanning || isMqttFingerprintRegistering}
                 onStartScan={handleStartFingerprintEnroll}
                 onValueChange={(value) => setNewFaculty({ ...newFaculty, fingerprintId: value })}
                 label="Fingerprint Template ID"
