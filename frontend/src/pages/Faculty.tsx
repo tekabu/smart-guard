@@ -45,9 +45,15 @@ const MQTT_REGISTER_FINGERPRINT_TOPIC = "smartguard/register/fingerprint";
 const MQTT_REGISTER_FINGERPRINT_SUCCESS_TOPIC = "smartguard/register/fingerprint/success";
 
 const createUuid = () => {
-  const randomUUID = globalThis.crypto?.randomUUID;
-  if (typeof randomUUID === "function") {
-    return randomUUID();
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj && typeof cryptoObj.randomUUID === "function") {
+    return cryptoObj.randomUUID();
+  }
+  if (cryptoObj && typeof cryptoObj.getRandomValues === "function") {
+    const array = new Uint8Array(16);
+    cryptoObj.getRandomValues(array);
+    const hex = Array.from(array, (b) => b.toString(16).padStart(2, "0")).join("");
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
   }
   return `uuid-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
